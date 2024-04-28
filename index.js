@@ -13,6 +13,7 @@ var fs = require('fs'),
 	os = require('os'),
 	chokidar = require('chokidar');
 require('colors');
+const authConnect = require("http-auth-connect");
 
 var INJECTED_CODE = fs.readFileSync(path.join(__dirname, "injected.html"), "utf8");
 
@@ -155,6 +156,7 @@ LiveServer.start = function(options) {
 	if (httpsModule) {
 		try {
 			require.resolve(httpsModule);
+		// eslint-disable-next-line no-unused-vars
 		} catch (e) {
 			console.error(("HTTPS module \"" + httpsModule + "\" you've provided was not found.").red);
 			console.error("Did you do", "\"npm install " + httpsModule + "\"?");
@@ -199,7 +201,7 @@ LiveServer.start = function(options) {
 			realm: "Please authorize",
 			file: htpasswd
 		});
-		app.use(auth.connect(basic));
+		app.use(authConnect(basic));
 	}
 	if (cors) {
 		app.use(require("cors")({
